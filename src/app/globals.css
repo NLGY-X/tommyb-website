@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+/*
+  Design system, matched to the hero artwork: warm near-black, bone-white
+  distressed lettering, dusty brick red, rust amber and muted teal from the
+  speaker cabinets and light streaks.
+*/
+
+:root {
+  --br-space: #070708;
+  --br-platinum: #ece7dc;
+  --br-chrome: #a39d90;
+  --br-teal: #2fa8a0;
+  --br-red: #d43d2f;
+  --br-amber: #e07b24;
+  --br-gold: #b08d57;
+}
+
+@theme inline {
+  --color-br-space: var(--br-space);
+  --color-br-platinum: var(--br-platinum);
+  --color-br-chrome: var(--br-chrome);
+  --color-br-teal: var(--br-teal);
+  --color-br-red: var(--br-red);
+  --color-br-amber: var(--br-amber);
+  --color-br-gold: var(--br-gold);
+  --font-space-mono: var(--font-space-mono);
+  --font-display: var(--font-display);
+  --font-inter: var(--font-inter);
+}
+
+html {
+  /* Stops iOS inflating body copy when a phone is turned to landscape. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: #070708;
+  color: #ece7dc;
+  /* The design supplies its own press states; the grey flash fights them. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #d43d2f;
+  color: #ece7dc;
+}
+
+/* ---------- Glass and chrome ---------- */
+
+.glass-panel {
+  background: rgba(236, 231, 220, 0.03);
+  border: 1px solid rgba(163, 157, 144, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.gold-hairline {
+  border-top: 1px solid rgba(176, 141, 87, 0.45);
+}
+
+.light-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-sweep::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -80%;
+  width: 60%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(7, 7, 8, 0.12) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  transition: left 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.light-sweep:hover::before {
+  left: 120%;
+}
+
+.hero-kenburns {
+  animation: hero-kenburns 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes hero-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+/* ---------- Texture: grain and distressed type ---------- */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Erodes display type like the artwork's distressed TOMMY B lettering. */
+.distressed {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 14 -6.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E%3C/svg%3E");
+  mask-size: 240px 240px;
+}
+
+/* ---------- Light streaks and haze (from the hero artwork) ---------- */
+
+.ambient-haze {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 40% at 12% 8%, rgba(212, 61, 47, 0.05), transparent),
+    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(224, 123, 36, 0.045), transparent),
+    radial-gradient(ellipse 50% 40% at 30% 90%, rgba(47, 168, 160, 0.05), transparent);
+}
+
+.beam-line {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 61, 47, 0.75) 20%,
+    rgba(224, 123, 36, 0.8) 50%,
+    rgba(47, 168, 160, 0.75) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 10px rgba(224, 123, 36, 0.25);
+}
+
+.beam-text {
+  background: linear-gradient(92deg, #d43d2f 0%, #e07b24 48%, #2fa8a0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Twitch chat, dragged onto the palette ---------- */
+
+/*
+ * The chat is a cross-origin iframe, so nothing inside it can be styled from
+ * here — Twitch's only theming knob is the `darkpopout` param already on the
+ * embed URL. What is left is compositing from our side of the boundary.
+ *
+ * A hue rotation would only ever land every accent on one flat colour, so
+ * instead a gradient sits over the frame in `hue` blend mode. That takes the
+ * hue from the gradient but keeps the backdrop's saturation and lightness,
+ * which means Twitch's purple chrome picks up whichever part of the site
+ * gradient it sits under, while the chat copy and dark background — carrying
+ * no saturation to shift — come through untouched.
+ *
+ * `isolation` keeps the blend off the page behind, and the overlay must stay
+ * pointer-transparent so the chat itself is still clickable.
+ */
+.twitch-chat-tint {
+  position: relative;
+  isolation: isolate;
+}
+
+.twitch-chat-tint::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: hue;
+  background: linear-gradient(
+    160deg,
+    #d43d2f 0%,
+    #e07b24 60%,
+    #2fa8a0 100%
+  );
+}
+
+/* ---------- Tour timeline waveform texture ---------- */
+
+.timeline-wave {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.45) 0px,
+    rgba(0, 0, 0, 0.45) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 70%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 30%,
+    #000 70%,
+    transparent 100%
+  );
+}
+
+/* ---------- Shared ---------- */
+
+.section-fade {
+  animation: section-fade 0.9s ease-out both;
+}
+
+@keyframes section-fade {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .section-fade,
+  .hero-kenburns,
+  .marquee-track {
+    animation: none;
+  }
+
+  .light-sweep::before {
+    transition: none;
+  }
+}
