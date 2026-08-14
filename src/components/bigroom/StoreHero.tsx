@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { withBasePath } from "@/components/shared/basePath";
 import { useCart } from "@/components/store/CartContext";
 
 /*
@@ -22,7 +23,7 @@ export default function StoreHero() {
       */}
       <div className="relative h-[210px] w-full overflow-hidden sm:h-[320px] lg:h-[440px]">
         <Image
-          src="/store-shop.jpg"
+          src={withBasePath("/store-shop.jpg")}
           alt="The Tommy B record shop: a neon TOMMY B Records and Merch sign above crates of vinyl, with branded caps and hoodies on the racks"
           fill
           loading="eager"

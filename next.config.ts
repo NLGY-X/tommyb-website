@@ -7,7 +7,7 @@ import type { NextConfig } from "next";
  * deploy keep the optimiser and serve from root.
  */
 const staticExport = process.env.STATIC_EXPORT === "1";
-const basePath = process.env.BASE_PATH ?? "";
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["three"],

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { withBasePath } from "@/components/shared/basePath";
 import { TAGLINE_BIGROOM } from "@/data/content";
 
 const HERO_ALT =
@@ -17,7 +18,7 @@ export default function HeroSection() {
       {/* desktop: full bleed cover with slow zoom */}
       <div className="hero-kenburns absolute inset-0 hidden md:block">
         <Image
-          src="/tommy-b-stack.png"
+          src={withBasePath("/tommy-b-stack.png")}
           alt={HERO_ALT}
           fill
           priority
@@ -38,7 +39,7 @@ export default function HeroSection() {
           }}
         />
         <Image
-          src="/tommy-b-stack.png"
+          src={withBasePath("/tommy-b-stack.png")}
           alt={HERO_ALT}
           width={1667}
           height={943}
