@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Mono, Archivo_Black, Inter } from "next/font/google";
-import { CartProvider } from "@/components/store/CartContext";
 import BigRoomNav from "@/components/bigroom/BigRoomNav";
 import BigRoomFooter from "@/components/bigroom/BigRoomFooter";
 import "./globals.css";
@@ -51,11 +50,9 @@ export default function RootLayout({
         <div className="theme-bigroom relative flex min-h-screen flex-1 flex-col overflow-x-hidden bg-br-space text-br-platinum">
           <div aria-hidden className="ambient-haze" />
           <div aria-hidden className="grain" />
-          <CartProvider storageKey="tommyb-cart">
-            <BigRoomNav />
-            <div className="relative z-10 flex flex-1 flex-col">{children}</div>
-            <BigRoomFooter />
-          </CartProvider>
+          <BigRoomNav />
+          <div className="relative z-10 flex flex-1 flex-col">{children}</div>
+          <BigRoomFooter />
         </div>
       </body>
     </html>

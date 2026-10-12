@@ -1,25 +1,27 @@
 import type { NextConfig } from "next";
 
-/*
- * GitHub Pages serves a project repo from a subpath and cannot run the image
- * optimiser, so the static export needs both a basePath and unoptimized
- * images. Both are opt-in via env so local dev and a future Vercel/Node
- * deploy keep the optimiser and serve from root.
- */
-const staticExport = process.env.STATIC_EXPORT === "1";
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-
 const nextConfig: NextConfig = {
   transpilePackages: ["three"],
-  ...(staticExport ? { output: "export" as const, basePath } : {}),
   images: {
-    unoptimized: staticExport,
     /*
-     * Next 16 only optimises qualities on this allowlist (default [75]), and
-     * warns for anything else. 80 is the home hero, 85 the store hero — both
-     * are large photographic headers that show banding lower down.
+     * Next 16 only optimises qualities on this allowlist (default [75]).
+     * 80 is the home hero, a large photographic header that bands lower down.
      */
-    qualities: [75, 80, 85],
+    qualities: [75, 80],
+    /* Site artwork in public/ plus Tommy's uploads, served by app/uploads. */
+    localPatterns: [
+      { pathname: "/*.png", search: "" },
+      { pathname: "/*.jpg", search: "" },
+      { pathname: "/uploads/**", search: "" },
+    ],
+  },
+  experimental: {
+    /*
+     * Server actions cap request bodies at 1MB by default. Posters are
+     * shrunk in the browser before upload, but press photos and a rider PDF
+     * can be several MB, and the browser resize is skipped if it fails.
+     */
+    serverActions: { bodySizeLimit: "16mb" },
   },
 };
 

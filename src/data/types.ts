@@ -14,30 +14,3 @@ export interface Gig {
   setHours: number;
   note?: string;
 }
-
-export type ProductCategory = "music" | "merch";
-
-/** Which placeholder mark the card draws until real product shots exist. */
-export type ProductArt = "vinyl" | "tee" | "hoodie" | "slipmat" | "cap";
-
-export interface Product {
-  id: string;
-  title: string;
-  category: ProductCategory;
-  detail: string;
-  format?: string;
-  priceGbp: number;
-  accent?: string;
-  /** Defaults to vinyl for music, tee for merch. */
-  art?: ProductArt;
-}
-
-export type ReleaseFormat = "WAV" | "MP3" | '12" Vinyl';
-
-export interface Release {
-  id: string;
-  title: string;
-  kind: "EP" | "Single";
-  format: ReleaseFormat;
-  priceGbp: number;
-}
