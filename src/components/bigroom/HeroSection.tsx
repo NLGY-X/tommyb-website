@@ -9,7 +9,7 @@ const HERO_ALT = "Tommy B: a tower of stacked speaker cabinets lit by stage ligh
  * slow zoom and letterbox bars. One <img> means one download.
  *
  * The WebP sizes are made ahead of time (public/hero-*.webp, 43KB to 189KB
- * against the 2.3MB PNG) rather than by the image optimiser, so the most
+ * against the 2.3MB PNG; a 3x iPhone takes the 126KB 1280) rather than by the image optimiser, so the most
  * important picture on the site never waits on a resize job.
  */
 export default function HeroSection({ tagline }: { tagline: string }) {
@@ -28,7 +28,7 @@ export default function HeroSection({ tagline }: { tagline: string }) {
         {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized static files, see above */}
         <img
           src="/hero-1024.webp"
-          srcSet="/hero-640.webp 640w, /hero-1024.webp 1024w, /hero-1667.webp 1667w"
+          srcSet="/hero-640.webp 640w, /hero-1024.webp 1024w, /hero-1280.webp 1280w, /hero-1667.webp 1667w"
           sizes="100vw"
           alt={HERO_ALT}
           width={1667}

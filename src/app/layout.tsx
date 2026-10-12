@@ -32,6 +32,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   openGraph: {
     siteName: "Tommy B",
+    url: "/",
     locale: "en_GB",
     type: "website",
     title: "Tommy B | Hard trance DJ and producer",

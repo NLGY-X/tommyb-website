@@ -51,7 +51,6 @@ export function CalendarLink({ gig, className = "" }: { gig: Gig; className?: st
   return (
     <a
       href={`/events/${gig.id}/ics`}
-      download
       className={`inline-flex min-h-11 items-center gap-1.5 ${mono} text-[11px] tracking-[0.2em] text-br-teal underline-offset-4 hover:underline md:min-h-9 ${className}`}
     >
       <span aria-hidden>+</span> CALENDAR

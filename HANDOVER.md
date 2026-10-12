@@ -76,7 +76,7 @@ cd ~/tommyb && docker compose stop && tar czf ~/tommyb-data-$(date +%F).tgz data
 | --- | --- |
 | `/` | Hero artwork; the next gig as a flyer strip with poster, tickets and add-to-calendar; the featured SoundCloud track; up to five more dates; credits; mailing list sign-up; booking call |
 | `/events` | Upcoming gigs on the club-night timeline (21:00 to 05:00, a marker at the start time), stacked cards on a phone, posters, a ticket button only when there's a link, `.ics` per gig, MusicEvent JSON-LD; then the mailing list and the past gigs archive by year |
-| `/events/[id]/ics` | One gig as a calendar file. Early-hours starts (before 07:00) land on the morning after the night's date. |
+| `/events/[id]/ics` | One gig as a calendar file, served `inline` so iPhone Safari offers Add to Calendar (an attachment would go to Files). Early-hours starts (before 07:00) land on the morning after the night's date. |
 | `/booking` | Press kit: booking copy and email, credits, short bio, downloadable press photos, top three mixes, tech rider (text and/or PDF), coming-up and past gigs, enquiry form with a thank-you |
 | `/music` | Featured track, the mix list, the SoundCloud profile player |
 | `/bio` | Tagline, bio, profile facts, the first press photo if there is one |
@@ -88,11 +88,14 @@ A gig moves from upcoming to past at 6am London time the morning after its date,
 
 ## The admin
 
-Built for a phone: 17px inputs (no iOS zoom), 56px buttons, plain labels.
+Built for a phone: 17px inputs (no iOS zoom), 56px buttons, plain labels. Long forms (gig, links, about) keep the save button pinned to the bottom of the screen; only the back link stays pinned at the top, so the keyboard and the form get the room.
+
+- **Home screen**: saving `/admin` to the home screen opens it full screen as "TB admin" (`/admin/manifest.webmanifest`, `apple-icon.png`, `public/icon-*.png`). A home-screen app keeps its own cookies on iPhone, so Tommy signs in once more there.
+- **Bad signal**: if a save can't reach the server, the form says so and keeps everything typed. Each add-gig form carries a random token and the server saves each token once, so a double tap, or a retry after the reply was lost, never makes a second gig. A server error names its field, and the form scrolls to it and outlines it in red.
 
 - **Sign-in**: compared in constant time against `ADMIN_PASSWORD`. Five wrong tries locks that address for 15 minutes, with a ceiling of 50 failures across all addresses. Success sets an httpOnly, Secure, SameSite=Lax cookie on `/admin` for a year, signed with HMAC-SHA256 using a random per-install secret (stored in the DB) mixed with the password.
-- **Gigs**: date (native picker), optional start time, name of the night, venue (blank for a secret location), town, status (Tickets on sale, Free entry, Sold out, Location TBA), optional ticket link, optional poster, note. Edit, delete, duplicate (copies everything except the date, poster included).
-- **Photos** are shrunk in the browser before upload (posters to 1600px, press photos to 3000px, JPEG), which saves mobile data and drops the GPS location phones store in photos. The server checks file type by its bytes and caps files at 15MB. Uploads display through Next's image optimiser (sharp ships with Next).
+- **Gigs**: date (native picker, read back underneath in words, e.g. "Saturday 21 November 2026, 02:00 (the early hours of Sunday 22 November)", because the picker uses the phone's own date order), optional start time, name of the night, venue (blank for a secret location), town, status (Tickets on sale, Free entry, Sold out, Location TBA), optional ticket link, optional poster, note. Edit, delete, duplicate (copies everything except the date, poster included).
+- **Photos** are shrunk in the browser before upload (posters to 1600px, press photos to 3000px, JPEG), which saves mobile data and drops the GPS location phones store in photos. The file inputs accept `image/*`, which makes iOS hand over a JPEG copy of a HEIC photo. A HEIC that still arrives (a browser other than Safari can't decode one) is refused with instructions: take a screenshot, or set the camera to Most Compatible. The server checks file type by its bytes and caps files at 15MB. Uploads display through Next's image optimiser (sharp ships with Next).
 - **Music**: paste a SoundCloud link for the home page, keep an ordered mix list. `on.soundcloud.com` share links are followed to the full address at save time, because the embed can't read them.
 - **Messages**: booking enquiries and mailing list sign-ups, newest first, CSV export of each. The site doesn't send emails to the list; Tommy exports it and emails from his own account.
 
@@ -125,7 +128,7 @@ The admin uses the same palette without grain or distressed type.
 ## Performance
 
 - **Nothing 3D is mounted on any page.** The procedural three.js library (`src/components/three/`, `StudioScene`, `StoreBanner`) ships no bytes because nothing imports it. Delete it if the artwork direction is final; three, drei and postprocessing could then come out of `package.json`.
-- The hero is one `<img>` with pre-sized WebP files (`public/hero-640.webp` 43KB, `-1024` 94KB, `-1667` 189KB) instead of the 2.3MB PNG. It doesn't use the image optimiser: during local testing one optimiser job for the hero (w=1920) hung and the desktop hero stayed blank until a restart, which isn't a risk worth taking on the main image.
+- The hero is one `<img>` with pre-sized WebP files (`public/hero-640.webp` 43KB, `-1024` 94KB, `-1280` 126KB, `-1667` 189KB) instead of the 2.3MB PNG. It doesn't use the image optimiser: during local testing one optimiser job for the hero (w=1920) hung and the desktop hero stayed blank until a restart, which isn't a risk worth taking on the main image.
 - On a phone the hero sits still; the slow zoom runs from 768px up. Reduced motion stops the zoom, the ticker and the fades.
 - Link previews are static JPEGs of about 110KB each (`opengraph-image.jpg` in each route folder), made from the hero artwork with the page name in the site fonts. Swap any of them for another 1200x630 JPEG with the same name.
 
