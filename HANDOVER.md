@@ -73,7 +73,7 @@ Reduced motion is respected across CSS animations and the 3D canvases. Decorativ
 - **Live-set copyright**: Twitch mutes archived recordings containing other artists' tracks, and repeat strikes can suspend the channel. Originals-heavy sets are safest; the `/live` page says so.
 - **Facebook links** point at facebook.com until the real page URL is supplied. Search for `facebook.com` to find them all.
 - **Bandcamp has been removed — do not restore it from an old commit.** The site previously linked `djtommyb72.bandcamp.com`, which belongs to a *different* artist called Tommy B. Every claim sourced from it (the 69-track back catalogue pack, the per-track prices) has been pulled with the link. Add a Bandcamp link back only once the real account is confirmed by the artist.
-- **SoundCloud is assumed real but unverified by us.** Embeds pull live from https://soundcloud.com/tommy-b-2, and the "270K+ plays" figure depends on that account being his. Worth confirming with the artist given the Bandcamp mix-up.
+- **SoundCloud** (https://soundcloud.com/tommy-b-2) is Tommy's own account, confirmed by Dan on 12 Oct 2026, so the "270K+ plays" figure stands.
 
 ## Images
 

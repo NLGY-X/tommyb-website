@@ -53,7 +53,7 @@ function StatusBadge({ status }: { status: Gig["status"] }) {
   if (status === "locked") {
     return (
       <Link
-        href="/booking#circle"
+        href="/booking"
         className="inline-flex min-h-11 items-center border border-br-gold/60 px-3 font-(family-name:--font-space-mono) text-[10px] tracking-[0.2em] text-br-gold transition-colors hover:border-br-gold hover:text-br-platinum md:min-h-0 md:py-1.5"
       >
         ON REQUEST
@@ -62,7 +62,7 @@ function StatusBadge({ status }: { status: Gig["status"] }) {
   }
   return (
     <Link
-      href="/booking#circle"
+      href="/booking"
       className="light-sweep inline-flex min-h-11 items-center bg-br-platinum px-3 font-(family-name:--font-space-mono) text-[10px] font-bold tracking-[0.2em] text-br-space transition-colors hover:bg-br-red hover:text-br-platinum md:min-h-0 md:py-1.5"
     >
       TICKETS
@@ -101,7 +101,10 @@ function SetBlock({ gig, accent }: { gig: Gig; accent: string }) {
 }
 
 export default function EventsPage() {
-  const range = `${monthLabel(gigs[0].date)} — ${monthLabel(gigs[gigs.length - 1].date)}`;
+  const range =
+    gigs.length > 0
+      ? `${monthLabel(gigs[0].date)} — ${monthLabel(gigs[gigs.length - 1].date)}`
+      : "";
 
   return (
     <main className="relative px-6 pb-24 pt-32">
@@ -111,12 +114,19 @@ export default function EventsPage() {
             TOMMY B — LIVE 2026
           </h1>
           <p className="font-(family-name:--font-space-mono) text-xs tracking-[0.3em] text-br-chrome">
-            {gigs.length} SHOWS&nbsp;&nbsp;{range}
+            {gigs.length > 0 ? <>{gigs.length} SHOWS&nbsp;&nbsp;{range}</> : "DATES TBA"}
           </p>
         </div>
 
+        {gigs.length === 0 ? (
+          <p className="mt-10 max-w-xl font-(family-name:--font-inter) text-sm leading-relaxed text-br-chrome">
+            New dates are landing soon. Follow on SoundCloud for the latest, or
+            head to the booking page to bring Tommy to your night.
+          </p>
+        ) : null}
+
         {/* desktop: timeline grid */}
-        <div className="mt-10 hidden md:block">
+        <div className={gigs.length === 0 ? "hidden" : "mt-10 hidden md:block"}>
           <div className="grid grid-cols-[170px_minmax(0,1fr)_120px] items-center gap-4 border-b border-white/10 pb-3">
             <p className="font-(family-name:--font-space-mono) text-[10px] tracking-[0.25em] text-br-chrome/60">
               DATE / CITY
@@ -204,22 +214,11 @@ export default function EventsPage() {
         </div>
 
         <div className="mt-16 text-center">
-          <p className="font-(family-name:--font-space-mono) text-xs tracking-[0.3em] text-br-chrome/70">
-            PVT/LIST — UNDISCLOSED LOCATIONS
-          </p>
-          <h2 className="mt-6 font-(family-name:--font-display) text-2xl uppercase text-br-platinum md:text-3xl">
-            The Inner Circle Hears First
-          </h2>
-          <hr className="beam-line mx-auto mt-8 max-w-md" />
-          <p className="mx-auto mt-8 max-w-xl font-(family-name:--font-inter) text-sm leading-relaxed text-br-chrome">
-            Locked dates drop to the private list before anywhere else. Join
-            the Inner Circle and the pin lands in your inbox.
-          </p>
           <Link
-            href="/booking#circle"
-            className="light-sweep mt-10 inline-block bg-br-platinum px-8 py-3.5 font-(family-name:--font-space-mono) text-sm font-bold tracking-[0.1em] text-br-space transition-colors hover:bg-br-red hover:text-br-platinum"
+            href="/booking"
+            className="light-sweep inline-block bg-br-platinum px-8 py-3.5 font-(family-name:--font-space-mono) text-sm font-bold tracking-[0.1em] text-br-space transition-colors hover:bg-br-red hover:text-br-platinum"
           >
-            JOIN THE INNER CIRCLE
+            BOOK TOMMY B
           </Link>
         </div>
       </div>

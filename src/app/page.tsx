@@ -1,12 +1,8 @@
 import Link from "next/link";
 import HeroSection from "@/components/bigroom/HeroSection";
-import ProductCard from "@/components/bigroom/ProductCard";
 import SoundCloudEmbed from "@/components/shared/SoundCloudEmbed";
 import { gigs } from "@/data/gigs";
-import { products } from "@/data/products";
 import { BOOKING_COPY, BOOKING_EMAIL, SOUNDCLOUD_URL } from "@/data/content";
-
-const FEATURED_IDS = ["wired-to-respond", "back-catalogue-pack"];
 
 const TICKER = [
   "HARD TRANCE",
@@ -14,7 +10,6 @@ const TICKER = [
   "EST. EARLY 2000S",
   "OXFORD, UK",
   "PROJECT STORM RECORDINGS",
-  "LIVE ON TWITCH",
 ];
 
 /* Same order as the events timeline, so a date keeps its colour everywhere. */
@@ -28,9 +23,6 @@ function statusLabel(status: (typeof gigs)[number]["status"]): string {
 
 export default function BigRoomHome() {
   const nextDates = gigs.slice(0, 3);
-  const featured = products.filter((product) =>
-    FEATURED_IDS.includes(product.id),
-  );
 
   return (
     <main className="relative">
@@ -62,6 +54,15 @@ export default function BigRoomHome() {
             </p>
           </div>
           <hr className="beam-line mt-8" />
+          {nextDates.length === 0 ? (
+            <p className="mt-8 font-(family-name:--font-inter) text-sm leading-relaxed text-br-chrome">
+              New dates are landing soon. Promoters, get in touch on the{" "}
+              <Link href="/booking" className="text-br-teal underline-offset-4 hover:underline">
+                booking page
+              </Link>
+              .
+            </p>
+          ) : null}
           <div className="mt-2">
             {nextDates.map((gig, index) => (
               <Link
@@ -99,12 +100,14 @@ export default function BigRoomHome() {
               </Link>
             ))}
           </div>
+          {nextDates.length > 0 ? (
           <Link
             href="/events"
             className="mt-6 inline-flex min-h-11 items-center font-(family-name:--font-space-mono) text-xs tracking-[0.25em] text-br-teal underline-offset-4 hover:underline md:min-h-0"
           >
             ALL TOUR DATES →
           </Link>
+          ) : null}
         </div>
       </section>
 
@@ -129,37 +132,6 @@ export default function BigRoomHome() {
             className="mt-6 inline-flex min-h-11 items-center font-(family-name:--font-space-mono) text-xs tracking-[0.25em] text-br-teal underline-offset-4 hover:underline md:min-h-0"
           >
             MORE MUSIC →
-          </Link>
-        </div>
-      </section>
-
-      {/* featured releases */}
-      <section className="px-6 pb-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-(family-name:--font-display) text-3xl uppercase text-br-platinum md:text-4xl">
-              From the Catalogue
-            </h2>
-            <p className="font-(family-name:--font-space-mono) text-xs tracking-[0.3em] text-br-chrome/70">
-              CAT/08 — STORE
-            </p>
-          </div>
-          <hr className="beam-line mt-8" />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {featured.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                compact
-                catalogNo={`TB-${String(products.indexOf(product) + 1).padStart(2, "0")}`}
-              />
-            ))}
-          </div>
-          <Link
-            href="/store"
-            className="mt-8 inline-flex min-h-11 items-center font-(family-name:--font-space-mono) text-xs tracking-[0.25em] text-br-teal underline-offset-4 hover:underline md:min-h-0"
-          >
-            VISIT THE STORE →
           </Link>
         </div>
       </section>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import InnerCircleForm from "@/components/bigroom/InnerCircleForm";
 import { BOOKING_COPY, BOOKING_EMAIL, INFO_EMAIL } from "@/data/content";
 
 export const metadata: Metadata = {
@@ -41,7 +40,6 @@ export default function BookingPage() {
         </div>
       </section>
 
-      <InnerCircleForm />
     </main>
   );
 }

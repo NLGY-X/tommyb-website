@@ -3,15 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useCart } from "@/components/store/CartContext";
 
 const LINKS = [
   { href: "/", label: "Home" },
   { href: "/bio", label: "Artist" },
   { href: "/music", label: "Music" },
   { href: "/events", label: "Dates" },
-  { href: "/live", label: "Live" },
-  { href: "/store", label: "Store" },
   { href: "/booking", label: "Booking" },
 ];
 
@@ -24,7 +21,6 @@ function isActive(pathname: string, href: string): boolean {
 
 export default function BigRoomNav() {
   const pathname = usePathname();
-  const { count } = useCart();
   const [open, setOpen] = useState(false);
   const [drawnFor, setDrawnFor] = useState(pathname);
 
@@ -67,7 +63,7 @@ export default function BigRoomNav() {
           TOMMY B
         </Link>
 
-        {/* Wide screens fit all seven labels in a row; narrow ones use the drawer below. */}
+        {/* Wide screens fit all the labels in a row; narrow ones use the drawer below. */}
         <nav className="hidden md:flex md:flex-1 md:items-center md:justify-center md:gap-7">
           {LINKS.map((link) => {
             const active = isActive(pathname, link.href);
@@ -100,19 +96,6 @@ export default function BigRoomNav() {
         </nav>
 
         <div className="ml-auto flex shrink-0 items-center gap-1 md:ml-0 md:gap-4">
-          <Link
-            href="/basket"
-            className={`flex min-h-11 items-center gap-2 whitespace-nowrap px-2 font-(family-name:--font-inter) text-sm transition-colors md:min-h-0 md:px-0 ${
-              isActive(pathname, "/basket")
-                ? "text-br-platinum"
-                : "text-br-chrome hover:text-br-platinum"
-            }`}
-          >
-            Cart
-            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-br-platinum px-1.5 font-(family-name:--font-inter) text-[11px] font-semibold text-br-space">
-              {count}
-            </span>
-          </Link>
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}

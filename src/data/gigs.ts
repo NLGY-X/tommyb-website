@@ -1,72 +1,7 @@
 import type { Gig } from "./types";
 
-export const gigs: Gig[] = [
-  {
-    id: "acid-communion",
-    date: "2026-08-15",
-    displayDate: "Sat 15 Aug 2026",
-    name: "Acid Communion",
-    venue: "The Boiler House",
-    city: "Leeds",
-    status: "tickets",
-    setStart: "23:00",
-    setHours: 3,
-  },
-  {
-    id: "secret-sep",
-    date: "2026-09-04",
-    displayDate: "Fri 04 Sep 2026",
-    name: "Secret Rave",
-    venue: "Undisclosed Site",
-    city: "Manchester outskirts",
-    status: "locked",
-    setStart: "00:00",
-    setHours: 4,
-    note: "Location drops 24 hours before doors. Mailing list only.",
-  },
-  {
-    id: "tempo-overload",
-    date: "2026-09-26",
-    displayDate: "Sat 26 Sep 2026",
-    name: "Tempo Overload",
-    venue: "Vortex Warehouse",
-    city: "Birmingham",
-    status: "tickets",
-    setStart: "22:00",
-    setHours: 3.5,
-  },
-  {
-    id: "nitro-nights",
-    date: "2026-10-17",
-    displayDate: "Sat 17 Oct 2026",
-    name: "Nitro Nights",
-    venue: "The Bunker",
-    city: "Bristol",
-    status: "sold-out",
-    setStart: "23:30",
-    setHours: 2,
-  },
-  {
-    id: "secret-nov",
-    date: "2026-11-13",
-    displayDate: "Fri 13 Nov 2026",
-    name: "Secret Rave",
-    venue: "Undisclosed Site",
-    city: "Essex countryside",
-    status: "locked",
-    setStart: "01:00",
-    setHours: 3,
-    note: "Pin drops to the list 24 hours before doors. Bring a full tank.",
-  },
-  {
-    id: "frostbite",
-    date: "2026-12-12",
-    displayDate: "Sat 12 Dec 2026",
-    name: "Frostbite: Winter Trance Assembly",
-    venue: "Ironworks Arena",
-    city: "Glasgow",
-    status: "tickets",
-    setStart: "22:30",
-    setHours: 4,
-  },
-];
+/*
+ * Empty until Tommy's real dates are in. The demo list that used to sit here
+ * was invented; it is in git history (commit 2d9b293) if the shape is needed.
+ */
+export const gigs: Gig[] = [];
