@@ -1,7 +1,9 @@
+import { randomUUID } from "node:crypto";
 import Image from "next/image";
 import { saveGig } from "@/app/admin/actions";
 import type { Gig } from "@/lib/types";
 import ActionForm from "./ActionForm";
+import GigWhenFields from "./GigWhenFields";
 import PhotoInput from "./PhotoInput";
 import { Field, inputClass } from "./ui";
 
@@ -25,39 +27,24 @@ export default function GigForm({
 }) {
   const poster = gig?.poster ?? null;
   return (
-    <ActionForm action={saveGig} submitLabel={mode === "edit" ? "Save changes" : "Save gig"}>
+    <ActionForm action={saveGig} submitLabel={mode === "edit" ? "Save changes" : "Save gig"} stickySubmit>
       {mode === "edit" && gig?.id ? <input type="hidden" name="id" value={gig.id} /> : null}
+      {/* A double tap or a retry after lost signal sends this again, and the server saves once. */}
+      {mode === "edit" ? null : <input type="hidden" name="submitToken" value={randomUUID()} />}
       {mode === "duplicate" && poster ? <input type="hidden" name="copyPoster" value={poster} /> : null}
 
-      <Field label="Date">
-        <input
-          name="date"
-          type="date"
-          required
-          defaultValue={gig?.date ?? ""}
-          className={`${inputClass} [color-scheme:dark]`}
-        />
-      </Field>
-
-      <Field label="Start time (optional)" hint="After midnight? Keep the date of the night.">
-        <input
-          name="startTime"
-          type="time"
-          defaultValue={gig?.startTime ?? ""}
-          className={`${inputClass} [color-scheme:dark]`}
-        />
-      </Field>
+      <GigWhenFields date={gig?.date ?? ""} startTime={gig?.startTime ?? ""} />
 
       <Field label="Name of the night">
-        <input name="name" required maxLength={120} defaultValue={gig?.name ?? ""} autoCapitalize="words" className={inputClass} />
+        <input name="name" required maxLength={120} defaultValue={gig?.name ?? ""} autoCapitalize="words" autoComplete="off" enterKeyHint="next" className={inputClass} />
       </Field>
 
       <Field label="Venue" hint="Leave blank if the location is still secret.">
-        <input name="venue" maxLength={120} defaultValue={gig?.venue ?? ""} autoCapitalize="words" className={inputClass} />
+        <input name="venue" maxLength={120} defaultValue={gig?.venue ?? ""} autoCapitalize="words" autoComplete="off" enterKeyHint="next" className={inputClass} />
       </Field>
 
       <Field label="Town">
-        <input name="town" required maxLength={80} defaultValue={gig?.town ?? ""} autoCapitalize="words" className={inputClass} />
+        <input name="town" required maxLength={80} defaultValue={gig?.town ?? ""} autoCapitalize="words" autoComplete="off" enterKeyHint="next" className={inputClass} />
       </Field>
 
       <fieldset>
@@ -87,7 +74,9 @@ export default function GigForm({
           inputMode="url"
           autoCapitalize="off"
           autoCorrect="off"
+          autoComplete="off"
           spellCheck={false}
+          enterKeyHint="next"
           placeholder="https://"
           defaultValue={gig?.ticketUrl ?? ""}
           className={inputClass}
@@ -118,7 +107,7 @@ export default function GigForm({
       />
 
       <Field label="Note (optional)" hint="For example: Over 18s. Or: B2B with a friend.">
-        <textarea name="note" rows={3} maxLength={500} defaultValue={gig?.note ?? ""} className={inputClass} />
+        <textarea name="note" rows={3} maxLength={500} autoCapitalize="sentences" defaultValue={gig?.note ?? ""} className={inputClass} />
       </Field>
     </ActionForm>
   );

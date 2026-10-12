@@ -79,7 +79,7 @@ export default async function PressAdminPage() {
             </Field>
             {settings.riderPdf ? (
               <div className="rounded-xl border border-white/10 p-4">
-                <a href={`/uploads/${settings.riderPdf}`} className="text-base text-br-teal underline underline-offset-4" target="_blank" rel="noreferrer">
+                <a href={`/uploads/${settings.riderPdf}`} className="inline-flex min-h-11 items-center text-base text-br-teal underline underline-offset-4" target="_blank" rel="noreferrer">
                   Open the current rider PDF
                 </a>
                 <label className="mt-3 flex min-h-12 items-center gap-3 text-base text-br-chrome">

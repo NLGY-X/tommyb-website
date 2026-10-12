@@ -15,6 +15,7 @@ const urlInput = {
   autoCapitalize: "off",
   autoCorrect: "off",
   spellCheck: false,
+  autoComplete: "off",
   placeholder: "https://soundcloud.com/…",
 } as const;
 

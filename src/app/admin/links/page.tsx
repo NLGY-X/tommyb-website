@@ -21,7 +21,7 @@ export default async function LinksAdminPage() {
           Paste the link to each profile. Leave a box empty and it won&apos;t show anywhere on the site.
           Adding Twitch also turns on a Live page.
         </p>
-        <ActionForm action={saveLinks} submitLabel="Save links">
+        <ActionForm action={saveLinks} submitLabel="Save links" stickySubmit>
           {LINK_KEYS.map((key) => (
             <Field key={key} label={LINK_INFO[key].label}>
               <input
@@ -31,6 +31,8 @@ export default async function LinksAdminPage() {
                 autoCapitalize="off"
                 autoCorrect="off"
                 spellCheck={false}
+                autoComplete="off"
+                enterKeyHint="next"
                 placeholder={LINK_INFO[key].example}
                 defaultValue={settings.links[key]}
                 className={inputClass}
@@ -43,6 +45,8 @@ export default async function LinksAdminPage() {
               type="email"
               inputMode="email"
               autoCapitalize="off"
+              autoComplete="email"
+              enterKeyHint="done"
               defaultValue={settings.bookingEmail}
               className={inputClass}
             />

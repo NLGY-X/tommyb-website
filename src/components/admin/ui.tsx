@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
  */
 
 export const inputClass =
-  "block w-full min-h-14 rounded-xl border border-white/20 bg-white/[0.04] px-4 py-3 text-[17px] text-br-platinum placeholder:text-br-chrome/50 focus:border-br-teal focus:outline-none focus:ring-2 focus:ring-br-teal/40";
+  "block w-full min-h-14 rounded-xl border border-white/20 bg-white/[0.04] px-4 py-3 text-[17px] text-br-platinum placeholder:text-br-chrome/50 focus:border-br-teal focus:outline-none focus:ring-2 focus:ring-br-teal/40 aria-[invalid=true]:border-br-red aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-br-red/40";
 
 export const buttonPrimary =
   "flex min-h-14 w-full items-center justify-center rounded-xl bg-br-platinum px-6 text-[17px] font-semibold text-br-space transition-colors hover:bg-white active:bg-br-chrome disabled:opacity-60";
@@ -39,8 +39,10 @@ export function Field({
 
 export function AdminTop({ title, back = "/admin", backLabel = "Admin home" }: { title: string; back?: string | null; backLabel?: string }) {
   return (
+    <>
+    {/* Only the back link stays pinned; the title scrolls away so the keyboard and the form get the room. */}
     <header className="sticky top-0 z-20 border-b border-white/10 bg-br-space/95 pt-[env(safe-area-inset-top)] backdrop-blur">
-      <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-3">
+      <div className="mx-auto flex max-w-2xl items-center gap-3 px-4 py-1.5">
         {back ? (
           <Link href={back} className="-ml-2 flex min-h-11 items-center rounded-lg px-2 text-base text-br-chrome hover:text-br-platinum">
             <span aria-hidden className="mr-1 text-lg">‹</span>
@@ -50,8 +52,9 @@ export function AdminTop({ title, back = "/admin", backLabel = "Admin home" }: {
           <span className="font-(family-name:--font-display) text-sm tracking-[0.2em] text-br-platinum">TOMMY B</span>
         )}
       </div>
-      <h1 className="mx-auto max-w-2xl px-4 pb-4 text-2xl font-bold text-br-platinum">{title}</h1>
     </header>
+    <h1 className="mx-auto max-w-2xl px-4 pt-5 text-2xl font-bold text-br-platinum">{title}</h1>
+    </>
   );
 }
 

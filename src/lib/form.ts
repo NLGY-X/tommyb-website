@@ -2,6 +2,8 @@
 export interface FormState {
   ok?: string;
   error?: string;
+  /** The input the error is about, so the form can take Tommy straight to it. */
+  field?: string;
   /** Bumps on every reply, so the same message twice still shows. */
   at?: number;
 }
@@ -32,4 +34,43 @@ export function isIsoDate(value: string): boolean {
 
 export function isTime(value: string): boolean {
   return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+/** The random token each add form carries, so the server can tell a retry from a new gig. */
+export function isSubmitToken(value: string): boolean {
+  return /^[a-z0-9-]{16,64}$/i.test(value);
+}
+
+/**
+ * Runs each submission's save once. A double tap, or a retry after the phone
+ * lost signal before the reply came back, sends the same token again and
+ * gets the first save's result instead of a second gig. A save that throws
+ * is forgotten, so trying again really does try again.
+ */
+export class SubmitOnce<T> {
+  private runs = new Map<string, { at: number; result: Promise<T> }>();
+  private readonly ttlMs: number;
+
+  constructor(ttlMs = 60 * 60_000) {
+    this.ttlMs = ttlMs;
+  }
+
+  run(token: string, now: number, work: () => Promise<T>): Promise<T> {
+    for (const [key, entry] of this.runs) {
+      if (now - entry.at >= this.ttlMs) this.runs.delete(key);
+    }
+    const known = this.runs.get(token);
+    if (known) {
+      return known.result;
+    }
+    const result = work();
+    this.runs.set(token, { at: now, result });
+    result.catch(() => this.runs.delete(token));
+    return result;
+  }
+
+  /** For a save that answered "no" without saving anything. */
+  forget(token: string): void {
+    this.runs.delete(token);
+  }
 }

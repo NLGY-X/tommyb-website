@@ -139,6 +139,31 @@ export function formatGigDate(date: string, withYear = true): string {
   return `${p.weekday} ${p.day} ${p.month}${withYear ? ` ${p.year}` : ""}`;
 }
 
+/**
+ * The gig form's read-back of the picked date, in words. A phone's date
+ * picker shows whatever order the phone's region uses, so 03/04 can mean
+ * either month; "Friday 3 April 2026" can't. Early-hours starts say which
+ * morning they fall on. "" until there's a valid date.
+ */
+export function describeGigWhen(date: string, startTime: string | null | undefined): string {
+  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(date) ? utcDate(date) : null;
+  if (!parsed || Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date) {
+    return "";
+  }
+  const long = (d: string) => {
+    const p = dateParts(d);
+    return `${p.weekdayLong} ${p.day} ${p.monthLong}`;
+  };
+  const day = `${long(date)} ${dateParts(date).year}`;
+  if (!startTime || !/^([01]\d|2[0-3]):[0-5]\d$/.test(startTime)) {
+    return day;
+  }
+  if (Number(startTime.slice(0, 2)) < EARLY_HOURS_BEFORE) {
+    return `${day}, ${startTime} (the early hours of ${long(addDays(date, 1))})`;
+  }
+  return `${day}, ${startTime}`;
+}
+
 /** "Tonight", "Tomorrow", "In 5 days" or "" when more than a fortnight away. */
 export function countdown(date: string, now: Date): string {
   const night = currentNight(now);

@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { passwordMatches } from "@/lib/auth";
 import * as store from "@/lib/db";
-import { fileFrom, filesFrom, isIsoDate, isTime, text, type FormState } from "@/lib/form";
+import { fileFrom, filesFrom, isIsoDate, isSubmitToken, isTime, SubmitOnce, text, type FormState } from "@/lib/form";
 import { LINK_INFO, isEmail, normaliseLink, toUrl } from "@/lib/links";
 import { GIG_STATUSES, LINK_KEYS, type GigInput, type GigStatus, type Links } from "@/lib/types";
 import { isSafeUploadName, removeUpload, saveUpload } from "@/lib/uploads";
@@ -17,9 +17,13 @@ function done(ok: string): FormState {
   return { ok, at: Date.now() };
 }
 
-function fail(error: string): FormState {
-  return { error, at: Date.now() };
+function fail(error: string, field?: string): FormState {
+  return { error, field, at: Date.now() };
 }
+
+/* One per server process: a double tap on "Save gig" or a retry after lost signal adds one gig, not two. */
+const holder = globalThis as unknown as { __tommybGigSaves?: SubmitOnce<number | FormState> };
+const gigSaves = (holder.__tommybGigSaves ??= new SubmitOnce<number | FormState>());
 
 /* ---------- sign in and out ---------- */
 
@@ -35,7 +39,7 @@ export async function signIn(_prev: FormState, fd: FormData): Promise<FormState>
   }
   if (!passwordMatches(text(fd, "password", 200), process.env.ADMIN_PASSWORD)) {
     loginLimiter.fail(address, now);
-    return fail("That password isn't right.");
+    return fail("That password isn't right.", "password");
   }
   loginLimiter.succeed(address);
   await startSession();
@@ -71,17 +75,17 @@ export async function saveGig(_prev: FormState, fd: FormData): Promise<FormState
     note: text(fd, "note", 500),
   };
 
-  if (!isIsoDate(input.date)) return fail("Pick a date.");
-  if (input.startTime && !isTime(input.startTime)) return fail("The start time doesn't look right.");
-  if (!input.name) return fail("Add the name of the night.");
-  if (!input.town) return fail("Add the town.");
-  if (!(GIG_STATUSES as readonly string[]).includes(status)) return fail("Pick a status.");
-  if (!input.venue && status !== "tba") return fail("Add the venue, or pick “Location TBA”.");
+  if (!isIsoDate(input.date)) return fail("Pick a date.", "date");
+  if (input.startTime && !isTime(input.startTime)) return fail("The start time doesn't look right.", "startTime");
+  if (!input.name) return fail("Add the name of the night.", "name");
+  if (!input.town) return fail("Add the town.", "town");
+  if (!(GIG_STATUSES as readonly string[]).includes(status)) return fail("Pick a status.", "status");
+  if (!input.venue && status !== "tba") return fail("Add the venue, or pick “Location TBA”.", "venue");
 
   const ticket = text(fd, "ticketUrl", 500);
   if (ticket) {
     const url = toUrl(ticket);
-    if (!url) return fail("The ticket link doesn't look like a web address.");
+    if (!url) return fail("The ticket link doesn't look like a web address.", "ticketUrl");
     input.ticketUrl = url.toString();
   }
 
@@ -94,20 +98,34 @@ export async function saveGig(_prev: FormState, fd: FormData): Promise<FormState
     input.poster = null;
   }
   const upload = fileFrom(fd, "poster");
-  if (upload) {
-    const saved = await saveUpload(uploadsDir(), upload, [...IMAGE_KINDS]);
-    if (!saved.ok) return fail(saved.error);
-    input.poster = saved.name;
-  }
+  const withPoster = async (): Promise<FormState | null> => {
+    if (upload) {
+      const saved = await saveUpload(uploadsDir(), upload, [...IMAGE_KINDS]);
+      if (!saved.ok) return fail(saved.error, "poster");
+      input.poster = saved.name;
+    }
+    return null;
+  };
 
-  let savedId = id;
+  let savedId: number;
   if (existing && id) {
+    const problem = await withPoster();
+    if (problem) return problem;
     store.updateGig(database, id, input);
     if (existing.poster && existing.poster !== input.poster && !store.isUploadInUse(database, existing.poster)) {
       await removeUpload(uploadsDir(), existing.poster);
     }
+    savedId = id;
   } else {
-    savedId = store.createGig(database, input);
+    const create = async () => (await withPoster()) ?? store.createGig(database, input);
+    const token = text(fd, "submitToken", 64);
+    const result = isSubmitToken(token) ? await gigSaves.run(token, Date.now(), create) : await create();
+    if (typeof result !== "number") {
+      /* A refused poster saved nothing, so the next try with another photo must run. */
+      gigSaves.forget(token);
+      return result;
+    }
+    savedId = result;
   }
   refreshSite();
   redirect(`/admin/gigs?saved=${savedId}`);
@@ -132,7 +150,7 @@ export async function saveFeatured(_prev: FormState, fd: FormData): Promise<Form
     return done("Cleared. The home page shows your SoundCloud profile instead.");
   }
   const url = await resolveSoundCloud(raw);
-  if (!url) return fail("That isn't a SoundCloud link. Open the track in SoundCloud, tap Share, then Copy link.");
+  if (!url) return fail("That isn't a SoundCloud link. Open the track in SoundCloud, tap Share, then Copy link.", "featuredTrack");
   store.saveSettings(db(), { featuredTrack: url });
   refreshSite();
   return done("Saved. It's on the home page now.");
@@ -142,9 +160,9 @@ export async function addMix(_prev: FormState, fd: FormData): Promise<FormState>
   await requireAdmin();
   const title = text(fd, "title", 120);
   const raw = text(fd, "url", 500);
-  if (!raw) return fail("Paste the SoundCloud link.");
+  if (!raw) return fail("Paste the SoundCloud link.", "url");
   const url = await resolveSoundCloud(raw);
-  if (!url) return fail("That isn't a SoundCloud link. Open the mix in SoundCloud, tap Share, then Copy link.");
+  if (!url) return fail("That isn't a SoundCloud link. Open the mix in SoundCloud, tap Share, then Copy link.", "url");
   const fallback = url.split("/").pop()?.replace(/-/g, " ") ?? "Mix";
   store.addMix(db(), title || fallback, url);
   refreshSite();
@@ -185,12 +203,12 @@ export async function saveLinks(_prev: FormState, fd: FormData): Promise<FormSta
   for (const key of LINK_KEYS) {
     const cleaned = normaliseLink(key, text(fd, key, 500));
     if (cleaned === null) {
-      return fail(`The ${LINK_INFO[key].label} link doesn't look right. It should look like ${LINK_INFO[key].example}`);
+      return fail(`The ${LINK_INFO[key].label} link doesn't look right. It should look like ${LINK_INFO[key].example}`, key);
     }
     links[key] = cleaned;
   }
   const bookingEmail = text(fd, "bookingEmail", 254);
-  if (bookingEmail && !isEmail(bookingEmail)) return fail("The booking email doesn't look right.");
+  if (bookingEmail && !isEmail(bookingEmail)) return fail("The booking email doesn't look right.", "bookingEmail");
   store.saveSettings(db(), { links, bookingEmail });
   refreshSite();
   return done("Saved. Only the filled-in links show on the site.");

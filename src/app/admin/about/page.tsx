@@ -15,7 +15,7 @@ export default async function AboutAdminPage() {
     <>
       <AdminTop title="About" />
       <main className="mx-auto max-w-2xl px-4 pt-6">
-        <ActionForm action={saveAbout} submitLabel="Save">
+        <ActionForm action={saveAbout} submitLabel="Save" stickySubmit>
           <Field label="Tagline" hint="One short line under the big artwork on the home page.">
             <input name="tagline" maxLength={120} defaultValue={settings.tagline} className={inputClass} />
           </Field>

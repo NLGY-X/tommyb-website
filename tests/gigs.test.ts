@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import {
   countdown,
   currentNight,
+  describeGigWhen,
   gigStart,
   isoWithOffset,
   londonToUtc,
@@ -79,4 +80,16 @@ test("countdown labels", () => {
 test("a TBA location never shows the venue", () => {
   assert.equal(placeLine({ venue: "Secret Warehouse", town: "Oxford", status: "tba" }), "Location TBA, Oxford");
   assert.equal(placeLine({ venue: "The Bullingdon", town: "Oxford", status: "tickets" }), "The Bullingdon, Oxford");
+});
+
+test("the gig form reads the picked date back in words", () => {
+  assert.equal(describeGigWhen("2026-11-21", null), "Saturday 21 November 2026");
+  assert.equal(describeGigWhen("2026-11-21", "22:30"), "Saturday 21 November 2026, 22:30");
+  assert.equal(
+    describeGigWhen("2026-12-31", "02:00"),
+    "Thursday 31 December 2026, 02:00 (the early hours of Friday 1 January)",
+  );
+  assert.equal(describeGigWhen("", "22:00"), "");
+  assert.equal(describeGigWhen("2026-02-30", null), "");
+  assert.equal(describeGigWhen("2026-11-21", "25:00"), "Saturday 21 November 2026");
 });
