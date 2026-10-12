@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Mono, Archivo_Black, Inter } from "next/font/google";
-import BigRoomNav from "@/components/bigroom/BigRoomNav";
-import BigRoomFooter from "@/components/bigroom/BigRoomFooter";
 import "./globals.css";
 
 const spaceMono = Space_Mono({
@@ -21,13 +19,25 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const SITE_URL = (process.env.SITE_URL || "https://tommybmusic.co.uk").replace(/\/$/, "");
+const DESCRIPTION =
+  "Tommy B, hard trance DJ and producer from Oxford. Upcoming dates, mixes and bookings.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Tommy B | Hard Trance DJ and Producer",
+    default: "Tommy B | Hard trance DJ and producer",
     template: "%s | Tommy B",
   },
-  description:
-    "Tommy B. Hard trance DJ and producer. 140 BPM and rising. Bookings, releases and upcoming dates.",
+  description: DESCRIPTION,
+  openGraph: {
+    siteName: "Tommy B",
+    locale: "en_GB",
+    type: "website",
+    title: "Tommy B | Hard trance DJ and producer",
+    description: DESCRIPTION,
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 /* Paints mobile browser chrome the same near-black as the page. */
@@ -36,25 +46,13 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      lang="en"
+      lang="en-GB"
       className={`${spaceMono.variable} ${display.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-black">
-        <div className="theme-bigroom relative flex min-h-screen flex-1 flex-col overflow-x-hidden bg-br-space text-br-platinum">
-          <div aria-hidden className="ambient-haze" />
-          <div aria-hidden className="grain" />
-          <BigRoomNav />
-          <div className="relative z-10 flex flex-1 flex-col">{children}</div>
-          <BigRoomFooter />
-        </div>
-      </body>
+      <body className="flex min-h-full flex-col bg-black">{children}</body>
     </html>
   );
 }

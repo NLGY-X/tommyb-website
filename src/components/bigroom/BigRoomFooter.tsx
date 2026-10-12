@@ -1,64 +1,26 @@
 import Link from "next/link";
-import { INFO_EMAIL, SOUNDCLOUD_URL } from "@/data/content";
+import type { Links } from "@/lib/types";
+import { SOCIAL_ORDER, SocialIcon, MailIcon } from "./SocialIcons";
+import { LINK_INFO } from "@/lib/links";
 
-/*
- * Brand marks are inline SVG on a 24x24 grid, drawn in currentColor so each
- * one picks up its link's hover colour. No network request, no icon library.
- */
+/* Each mark lights up in its own brand colour on hover. */
+const HOVER: Record<keyof Links, string> = {
+  soundcloud: "hover:border-[#ff5500]/60 hover:text-[#ff5500]",
+  instagram: "hover:border-[#e1306c]/60 hover:text-[#e1306c]",
+  facebook: "hover:border-[#1877f2]/60 hover:text-[#4a90f5]",
+  twitch: "hover:border-[#9146ff]/60 hover:text-[#a970ff]",
+  bandcamp: "hover:border-[#1da0c3]/60 hover:text-[#1da0c3]",
+  spotify: "hover:border-[#1ed760]/60 hover:text-[#1ed760]",
+  beatport: "hover:border-[#01ff95]/60 hover:text-[#01ff95]",
+  residentAdvisor: "hover:border-br-platinum/60 hover:text-br-platinum",
+};
 
-function SoundCloudIcon({ className }: { className?: string }) {
+export default function BigRoomFooter({ links, email }: { links: Links; email: string }) {
+  const filled = SOCIAL_ORDER.filter((key) => links[key]);
+  const year = new Date().getFullYear();
+
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden className={className}>
-      {/* waveform bars, rising towards the cloud */}
-      <rect x="0.6" y="13.2" width="1.15" height="4.8" rx="0.57" />
-      <rect x="2.5" y="11.4" width="1.15" height="6.6" rx="0.57" />
-      <rect x="4.4" y="9.9" width="1.15" height="8.1" rx="0.57" />
-      <rect x="6.3" y="11.1" width="1.15" height="6.9" rx="0.57" />
-      {/* cloud */}
-      <path d="M9.5 18V8.6a5.3 5.3 0 0 1 8.62 2.62A3.9 3.9 0 0 1 17.9 18H9.5Z" />
-    </svg>
-  );
-}
-
-function MailIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className={className}
-    >
-      <rect x="2" y="4.5" width="20" height="15" rx="2" />
-      <path d="m2.8 6 8.1 6.1a1.8 1.8 0 0 0 2.2 0L21.2 6" />
-    </svg>
-  );
-}
-
-/* Each mark lights up in its own brand colour on hover; email takes the site teal. */
-const SOCIALS = [
-  {
-    name: "SoundCloud",
-    href: SOUNDCLOUD_URL,
-    external: true,
-    icon: SoundCloudIcon,
-    hover: "hover:border-[#ff5500]/60 hover:text-[#ff5500]",
-  },
-  {
-    name: "Press and booking enquiries by email",
-    href: `mailto:${INFO_EMAIL}`,
-    external: false,
-    icon: MailIcon,
-    hover: "hover:border-br-teal/60 hover:text-br-teal",
-  },
-];
-
-export default function BigRoomFooter() {
-  return (
-    <footer className="gold-hairline px-6 pb-[calc(3rem+env(safe-area-inset-bottom))] pt-14">
+    <footer className="gold-hairline relative z-10 px-6 pb-[calc(3rem+env(safe-area-inset-bottom))] pt-14">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 text-center">
         <Link
           href="/"
@@ -67,30 +29,37 @@ export default function BigRoomFooter() {
           TOMMY B
         </Link>
 
-        <ul className="flex items-center gap-4">
-          {SOCIALS.map((social) => {
-            const Icon = social.icon;
-            return (
-              <li key={social.name}>
-                <a
-                  href={social.href}
-                  {...(social.external
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                  className={`flex h-12 w-12 items-center justify-center rounded-full border border-br-chrome/25 text-br-chrome transition-colors duration-300 hover:bg-white/5 ${social.hover}`}
-                >
-                  <Icon className="h-[19px] w-[19px]" />
-                  <span className="sr-only">{social.name}</span>
-                </a>
-              </li>
-            );
-          })}
+        <ul className="flex flex-wrap items-center justify-center gap-3">
+          {filled.map((key) => (
+            <li key={key}>
+              <a
+                href={links[key]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex h-12 w-12 items-center justify-center rounded-full border border-br-chrome/25 text-br-chrome transition-colors duration-300 hover:bg-white/5 ${HOVER[key]}`}
+              >
+                <SocialIcon name={key} className="h-[19px] w-[19px]" />
+                <span className="sr-only">Tommy B on {LINK_INFO[key].label}</span>
+              </a>
+            </li>
+          ))}
+          {email ? (
+            <li>
+              <a
+                href={`mailto:${email}`}
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-br-chrome/25 text-br-chrome transition-colors duration-300 hover:border-br-teal/60 hover:bg-white/5 hover:text-br-teal"
+              >
+                <MailIcon className="h-[19px] w-[19px]" />
+                <span className="sr-only">Email {email}</span>
+              </a>
+            </li>
+          ) : null}
         </ul>
 
         <hr className="beam-line w-full max-w-xs opacity-60" />
 
-        <p className="max-w-md font-(family-name:--font-inter) text-xs leading-relaxed text-br-chrome/50">
-          © Tommy B 2026. Bookings: tommybmusic@mail.com
+        <p className="max-w-md font-(family-name:--font-inter) text-xs leading-relaxed text-br-chrome/60">
+          © Tommy B {year}.{email ? <> Bookings: {email}</> : null}
         </p>
       </div>
     </footer>

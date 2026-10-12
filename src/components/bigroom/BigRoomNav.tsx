@@ -4,13 +4,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const LINKS = [
+const BASE_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/bio", label: "Artist" },
-  { href: "/music", label: "Music" },
   { href: "/events", label: "Dates" },
+  { href: "/music", label: "Music" },
+  { href: "/bio", label: "Artist" },
   { href: "/booking", label: "Booking" },
 ];
+
+/* Live only appears once Tommy has added his Twitch link in the admin. */
+function linksFor(showLive: boolean) {
+  return showLive
+    ? [...BASE_LINKS.slice(0, 3), { href: "/live", label: "Live" }, ...BASE_LINKS.slice(3)]
+    : BASE_LINKS;
+}
 
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") {
@@ -19,8 +26,9 @@ function isActive(pathname: string, href: string): boolean {
   return pathname.startsWith(href);
 }
 
-export default function BigRoomNav() {
+export default function BigRoomNav({ showLive = false }: { showLive?: boolean }) {
   const pathname = usePathname();
+  const LINKS = linksFor(showLive);
   const [open, setOpen] = useState(false);
   const [drawnFor, setDrawnFor] = useState(pathname);
 

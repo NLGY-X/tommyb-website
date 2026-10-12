@@ -90,9 +90,12 @@ body {
   left: 120%;
 }
 
-.hero-kenburns {
-  animation: hero-kenburns 26s ease-in-out infinite alternate;
-  will-change: transform;
+/* Full-bleed zoom from md up only; on a phone the artwork sits still. */
+@media (min-width: 768px) {
+  .hero-kenburns {
+    animation: hero-kenburns 26s ease-in-out infinite alternate;
+    will-change: transform;
+  }
 }
 
 @keyframes hero-kenburns {
@@ -204,6 +207,25 @@ body {
     #e07b24 60%,
     #2fa8a0 100%
   );
+}
+
+/* ---------- Next-gig flyer ---------- */
+
+/* Hazard tape in the artwork's three colours along the flyer's top edge. */
+.flyer-tape {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--br-red) 0 14px,
+    var(--br-amber) 14px 28px,
+    var(--br-teal) 28px 42px,
+    #0c0b0b 42px 56px
+  );
+}
+
+.flyer {
+  background-image:
+    radial-gradient(ellipse 60% 80% at 100% 0%, rgba(224, 123, 36, 0.1), transparent),
+    radial-gradient(ellipse 50% 70% at 0% 100%, rgba(212, 61, 47, 0.1), transparent);
 }
 
 /* ---------- Tour timeline waveform texture ---------- */

@@ -64,15 +64,15 @@ function OfflinePanel({ channel }: { channel: string }) {
       </h2>
       <hr className="beam-line relative w-full max-w-xs" />
       <p className="relative max-w-sm font-(family-name:--font-inter) text-xs leading-relaxed text-br-chrome sm:text-sm">
-        Sets drop to the Inner Circle first. The stream lights up the moment the
-        booth does.
+        Nothing streaming right now. Follow on Twitch to get a notification when
+        Tommy goes live.
       </p>
       <div className="relative mt-2 flex flex-wrap items-center justify-center gap-3">
         <Link
           href="/events"
           className="light-sweep inline-flex min-h-11 items-center bg-br-platinum px-6 font-(family-name:--font-space-mono) text-xs font-bold tracking-[0.15em] text-br-space transition-colors hover:bg-br-red hover:text-br-platinum"
         >
-          TOUR DATES
+          DATES
         </Link>
         <a
           href={`https://twitch.tv/${channel}`}
