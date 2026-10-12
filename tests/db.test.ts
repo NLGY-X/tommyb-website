@@ -27,7 +27,7 @@ import {
   updateGig,
 } from "../src/lib/db.ts";
 import { toCsv } from "../src/lib/csv.ts";
-import { detectKind, imageSize, isSafeUploadName, saveUpload } from "../src/lib/uploads.ts";
+import { detectKind, HEIC_ERROR, imageSize, isHeic, isSafeUploadName, saveUpload } from "../src/lib/uploads.ts";
 import { normaliseLink, toUrl, twitchChannel } from "../src/lib/links.ts";
 import type { GigInput } from "../src/lib/types.ts";
 
@@ -189,6 +189,14 @@ test("uploads are typed by their bytes and sized from the header", async () => {
   }
   const refused = await saveUpload(dir, asFile(Buffer.from("%PDF-1.7\n")), ["jpg", "png", "webp"]);
   assert.equal(refused.ok, false);
+  // an iPhone HEIC gets its own explanation, not "that file type isn't supported"
+  const heic = Buffer.concat([Buffer.from("00000018667479706865696300000000", "hex"), Buffer.alloc(32)]);
+  assert.equal(isHeic(heic), true);
+  assert.equal(isHeic(png), false);
+  assert.deepEqual(await saveUpload(dir, asFile(heic), ["jpg", "png", "webp"]), { ok: false, error: HEIC_ERROR });
+  const heicAsRider = await saveUpload(dir, asFile(heic), ["pdf"]);
+  assert.ok(!heicAsRider.ok && heicAsRider.error !== HEIC_ERROR);
+  assert.equal(readdirSync(dir).length, 1);
   rmSync(dir, { recursive: true, force: true });
 
   assert.equal(isSafeUploadName("../site.db"), false);

@@ -37,6 +37,20 @@ export function detectKind(buf: Uint8Array): UploadKind | null {
   return null;
 }
 
+/**
+ * iPhones save photos as HEIC (Android phones sometimes as HEIF). Browsers
+ * other than Safari can't open them, so they can't be shrunk or shown on the
+ * site. Spotting them by the ftyp box lets the error say what to do.
+ */
+export function isHeic(buf: Uint8Array): boolean {
+  if (buf.length < 12 || ascii(buf, 4, 8) !== "ftyp") return false;
+  return ["heic", "heix", "heim", "heis", "hevc", "hevx", "mif1", "msf1"].includes(ascii(buf, 8, 12));
+}
+
+export const HEIC_ERROR =
+  "That's an iPhone HEIC photo, which websites can't show. Take a screenshot of it and upload the screenshot, " +
+  "or set the camera to Most Compatible (Settings, Camera, Formats).";
+
 function ascii(buf: Uint8Array, start: number, end: number): string {
   return String.fromCharCode(...buf.subarray(start, end));
 }
@@ -105,6 +119,9 @@ export async function saveUpload(
   }
   const buf = new Uint8Array(await file.arrayBuffer());
   const kind = detectKind(buf);
+  if (!kind && isHeic(buf) && allowed.includes("jpg")) {
+    return { ok: false, error: HEIC_ERROR };
+  }
   if (!kind || !allowed.includes(kind)) {
     const wanted = allowed.includes("pdf") && allowed.length === 1 ? "a PDF" : "a JPEG, PNG or WebP photo";
     return { ok: false, error: `That file type isn't supported. Please choose ${wanted}.` };

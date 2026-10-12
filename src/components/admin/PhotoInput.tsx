@@ -25,7 +25,7 @@ function mb(bytes: number): string {
  * inside it. If anything fails, the original goes up and the server checks it.
  */
 async function shrink(file: File, maxEdge: number, quality: number): Promise<File> {
-  if (!file.type.startsWith("image/")) {
+  if (!file.type.startsWith("image/") && !isHeicName(file)) {
     return file;
   }
   try {
@@ -47,9 +47,24 @@ async function shrink(file: File, maxEdge: number, quality: number): Promise<Fil
     }
     return new File([blob], `${file.name.replace(/\.[^.]+$/, "") || "photo"}.jpg`, { type: "image/jpeg" });
   } catch {
+    if (isHeicName(file)) {
+      throw new HeicError();
+    }
     return file;
   }
 }
+
+class HeicError extends Error {}
+
+/* Some Android file pickers report HEIC with an empty type, so check the name too. */
+function isHeicName(file: File): boolean {
+  return /image\/hei[cf]/.test(file.type) || /\.hei[cf]$/i.test(file.name);
+}
+
+/* Same words as the server's HEIC_ERROR in lib/uploads.ts. */
+const HEIC_HELP =
+  "That's an iPhone HEIC photo, which this browser can't open. Take a screenshot of it and choose the screenshot instead, " +
+  "or set the camera to Most Compatible (Settings, Camera, Formats).";
 
 interface PhotoInputProps {
   name: string;
@@ -63,6 +78,7 @@ interface PhotoInputProps {
 export default function PhotoInput({ name, label, hint, maxEdge, quality = 0.86, multiple }: PhotoInputProps) {
   const [previews, setPreviews] = useState<string[]>([]);
   const [note, setNote] = useState("");
+  const [problem, setProblem] = useState("");
 
   return (
     <div>
@@ -72,12 +88,14 @@ export default function PhotoInput({ name, label, hint, maxEdge, quality = 0.86,
         <input
           type="file"
           name={name}
-          accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*"
+          /* Plain image/*: iOS then hands over a JPEG copy of a HEIC photo. */
+          accept="image/*"
           multiple={multiple}
           className="block w-full rounded-xl border border-dashed border-white/25 bg-white/[0.03] p-4 text-base text-br-chrome file:mr-4 file:rounded-lg file:border-0 file:bg-br-platinum file:px-4 file:py-2.5 file:font-semibold file:text-br-space"
           onChange={(event) => {
             const input = event.currentTarget;
             const files = Array.from(input.files ?? []);
+            setProblem("");
             if (!files.length) {
               setPreviews([]);
               setNote("");
@@ -85,7 +103,17 @@ export default function PhotoInput({ name, label, hint, maxEdge, quality = 0.86,
             }
             setNote("Preparing…");
             const job = (async () => {
-              const out = await Promise.all(files.map((f) => shrink(f, maxEdge, quality)));
+              let out: File[];
+              try {
+                out = await Promise.all(files.map((f) => shrink(f, maxEdge, quality)));
+              } catch {
+                /* Nothing useful would upload, so clear the choice and say why. */
+                input.value = "";
+                setPreviews([]);
+                setNote("");
+                setProblem(HEIC_HELP);
+                return;
+              }
               try {
                 const dt = new DataTransfer();
                 out.forEach((f) => dt.items.add(f));
@@ -103,6 +131,11 @@ export default function PhotoInput({ name, label, hint, maxEdge, quality = 0.86,
         />
       </label>
       {note ? <p className="mt-2 text-sm text-br-teal">{note}</p> : null}
+      {problem ? (
+        <p role="alert" className="mt-2 rounded-xl border border-br-red/60 bg-br-red/10 px-4 py-3 text-base text-br-platinum">
+          {problem}
+        </p>
+      ) : null}
       {previews.length ? (
         <div className="mt-3 flex flex-wrap gap-2">
           {previews.map((src) => (
