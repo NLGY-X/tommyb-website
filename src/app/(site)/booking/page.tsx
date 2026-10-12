@@ -49,7 +49,7 @@ export default function BookingPage() {
       {/* header */}
       <section className="section-fade px-6">
         <div className="mx-auto max-w-6xl">
-          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>BKG — BOOKINGS AND PRESS KIT</p>
+          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>BKG / BOOKINGS AND PRESS KIT</p>
           <h1 className={`distressed mt-6 max-w-4xl ${display} text-[clamp(2.4rem,7vw,5.5rem)] uppercase leading-[1.02] tracking-tight text-br-platinum`}>
             Book Tommy&nbsp;B
           </h1>
@@ -118,7 +118,7 @@ export default function BookingPage() {
       {photos.length ? (
         <section aria-labelledby="photos" className="px-6 pt-20">
           <div className="mx-auto max-w-6xl">
-            <Heading id="photos" title="Press Photos" code={`EPK/02 — ${photos.length}`} />
+            <Heading id="photos" title="Press Photos" code={`EPK/02 / ${photos.length}`} />
             <hr className="beam-line mt-6 opacity-60" />
             <ul className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3">
               {photos.map((photo, i) => (
@@ -242,7 +242,7 @@ export default function BookingPage() {
       {/* enquiry */}
       <section id="enquire" aria-labelledby="enquire-title" className="scroll-mt-24 px-6 pt-24">
         <div className="mx-auto max-w-3xl">
-          <h2 id="enquire-title" className={`distressed text-center ${display} text-[clamp(2rem,6vw,4rem)] uppercase leading-tight text-br-platinum`}>
+          <h2 id="enquire-title" className={`distressed text-center ${display} text-[clamp(2rem,5vw,3.4rem)] uppercase leading-tight text-br-platinum`}>
             Bring the Tempo Up
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-center font-(family-name:--font-inter) text-sm leading-relaxed text-br-chrome">

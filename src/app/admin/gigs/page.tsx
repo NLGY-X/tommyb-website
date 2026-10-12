@@ -37,7 +37,7 @@ function GigRow({ gig, highlight }: { gig: Gig; highlight?: boolean }) {
           </span>
           <span className="block truncate text-lg font-semibold text-br-platinum">{gig.name}</span>
           <span className="block truncate text-sm text-br-chrome">
-            {placeLine(gig)} · {STATUS_LABELS[gig.status]}
+            {placeLine(gig)}{gig.status === "tba" ? "" : ` · ${STATUS_LABELS[gig.status]}`}
             {gig.ticketUrl ? " · ticket link" : ""}
           </span>
         </span>

@@ -29,7 +29,7 @@ export default function Home() {
       {next ? <NextGigFlyer gig={next} now={now} /> : null}
 
       {/* flyer ticker strip */}
-      <div className="mt-12 overflow-hidden border-y border-white/10 py-3">
+      <div className={`${next ? "mt-12" : ""} overflow-hidden border-y border-white/10 py-3`}>
         <div className={`marquee-track ${mono} text-xs tracking-[0.35em] text-br-chrome`}>
           {[...TICKER, ...TICKER].map((item, i) => (
             <span key={i} aria-hidden={i >= TICKER.length} className="flex items-center whitespace-nowrap">
@@ -140,7 +140,7 @@ export default function Home() {
       {/* credits */}
       <section className="px-6 pb-8">
         <div className="mx-auto max-w-6xl">
-          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>RCRD — TRACK RECORD</p>
+          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>RCRD / TRACK RECORD</p>
           <div className="mt-6">
             <Credits />
           </div>

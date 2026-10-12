@@ -30,7 +30,7 @@ export default function LivePage() {
           <h1 className="distressed font-(family-name:--font-display) text-3xl uppercase text-br-platinum md:text-5xl">
             Live Sets
           </h1>
-          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>STRM/LIVE — TWITCH</p>
+          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>STRM/LIVE · TWITCH</p>
         </div>
         <hr className="beam-line mt-8" />
 
@@ -47,7 +47,7 @@ export default function LivePage() {
 
         <div className="mt-10 grid gap-10 border-t border-white/10 pt-8 md:grid-cols-2">
           <div>
-            <p className={`${mono} text-[10px] tracking-[0.3em] text-br-chrome/70`}>01 — FOLLOW</p>
+            <p className={`${mono} text-[10px] tracking-[0.3em] text-br-chrome/70`}>01 / FOLLOW</p>
             <p className="mt-3 font-(family-name:--font-inter) text-sm leading-relaxed text-br-chrome">
               Follow the channel and Twitch tells you when he goes live:{" "}
               <a href={links.twitch} target="_blank" rel="noopener noreferrer" className="text-br-teal underline-offset-4 hover:underline">
@@ -56,7 +56,7 @@ export default function LivePage() {
             </p>
           </div>
           <div>
-            <p className={`${mono} text-[10px] tracking-[0.3em] text-br-chrome/70`}>02 — MISSED IT</p>
+            <p className={`${mono} text-[10px] tracking-[0.3em] text-br-chrome/70`}>02 / MISSED IT</p>
             <p className="mt-3 font-(family-name:--font-inter) text-sm leading-relaxed text-br-chrome">
               Mixes and sets are on the{" "}
               <Link href="/music" className="text-br-teal underline-offset-4 hover:underline">

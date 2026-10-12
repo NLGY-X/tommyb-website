@@ -39,7 +39,7 @@ export default function MusicPage() {
         {list.length ? (
           <section aria-labelledby="mixes" className="mt-16">
             <h2 id="mixes" className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>
-              MIXES AND SETS — {list.length}
+              MIXES AND SETS / {list.length}
             </h2>
             <ul className="mt-6 space-y-4">
               {list.map((mix) => (
@@ -73,7 +73,7 @@ export default function MusicPage() {
         ) : null}
 
         <div className="mt-20">
-          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>RCRD — TRACK RECORD</p>
+          <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>RCRD / TRACK RECORD</p>
           <div className="mt-6">
             <Credits />
           </div>

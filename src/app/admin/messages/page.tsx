@@ -64,7 +64,7 @@ export default async function MessagesPage({ searchParams }: { searchParams: Pro
                 {subscribers.length} {subscribers.length === 1 ? "person" : "people"} signed up for gig news.
               </p>
               {subscribers.length ? (
-                <a href="/admin/messages/export?list=mailing" className={buttonSecondary} download>
+                <a href="/admin/messages/export?list=mailing" className={`${buttonSecondary} shrink-0 whitespace-nowrap`} download>
                   Export CSV
                 </a>
               ) : null}
@@ -97,7 +97,7 @@ export default async function MessagesPage({ searchParams }: { searchParams: Pro
             <div className="flex items-center justify-between gap-3">
               <p className="text-base text-br-chrome">Booking enquiries from the booking page, newest first.</p>
               {enquiries.length ? (
-                <a href="/admin/messages/export?list=enquiries" className={buttonSecondary} download>
+                <a href="/admin/messages/export?list=enquiries" className={`${buttonSecondary} shrink-0 whitespace-nowrap`} download>
                   Export CSV
                 </a>
               ) : null}

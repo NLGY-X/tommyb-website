@@ -25,7 +25,7 @@ export default function ArtistPage() {
   return (
     <main className="relative px-6 pb-24 pt-32">
       <div className="section-fade mx-auto max-w-6xl">
-        <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>BIO — THE ARTIST</p>
+        <p className={`${mono} text-xs tracking-[0.3em] text-br-chrome/70`}>BIO / THE ARTIST</p>
         <h1 className="distressed mt-6 max-w-5xl font-(family-name:--font-display) text-[clamp(2.4rem,7vw,5.5rem)] uppercase leading-[1.05] tracking-tight text-br-platinum">
           Engineered for the Main&nbsp;Stage
         </h1>

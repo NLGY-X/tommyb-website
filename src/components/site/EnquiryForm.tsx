@@ -6,7 +6,7 @@ import { initialFormState } from "@/lib/form";
 
 const mono = "font-(family-name:--font-space-mono)";
 const input =
-  "mt-2 block min-h-12 w-full border border-br-chrome/30 bg-br-space/70 px-4 py-3 font-(family-name:--font-inter) text-base text-br-platinum placeholder:text-br-chrome/40 focus:border-br-teal focus:outline-none [color-scheme:dark]";
+  "mt-2 block min-h-12 w-full border border-br-chrome/30 bg-br-space/70 px-4 py-3 font-(family-name:--font-inter) text-base tracking-normal text-br-platinum placeholder:text-br-chrome/40 focus:border-br-teal focus:outline-none [color-scheme:dark]";
 const label = `block ${mono} text-[11px] tracking-[0.2em] text-br-chrome`;
 
 export default function EnquiryForm({ email }: { email: string }) {

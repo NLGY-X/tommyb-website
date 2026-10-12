@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 const HERO_ALT = "Tommy B: a tower of stacked speaker cabinets lit by stage light";
@@ -7,8 +6,11 @@ const HERO_ALT = "Tommy B: a tower of stacked speaker cabinets lit by stage ligh
  * The artwork already carries the TOMMY B lettering, so it is the hero.
  * One image for every screen: on a phone it sits at its natural shape so
  * the lettering is never cropped; from md up it fills the screen with a
- * slow zoom and letterbox bars. One <img> means one download, sized by
- * the optimiser for the screen, instead of two competing preloads.
+ * slow zoom and letterbox bars. One <img> means one download.
+ *
+ * The WebP sizes are made ahead of time (public/hero-*.webp, 43KB to 189KB
+ * against the 2.3MB PNG) rather than by the image optimiser, so the most
+ * important picture on the site never waits on a resize job.
  */
 export default function HeroSection({ tagline }: { tagline: string }) {
   return (
@@ -23,14 +25,16 @@ export default function HeroSection({ tagline }: { tagline: string }) {
         }}
       />
       <div className="hero-kenburns relative w-full md:absolute md:inset-0">
-        <Image
-          src="/tommy-b-stack.png"
+        {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized static files, see above */}
+        <img
+          src="/hero-1024.webp"
+          srcSet="/hero-640.webp 640w, /hero-1024.webp 1024w, /hero-1667.webp 1667w"
+          sizes="100vw"
           alt={HERO_ALT}
           width={1667}
           height={943}
-          preload
-          sizes="100vw"
-          quality={80}
+          fetchPriority="high"
+          decoding="async"
           className="relative h-auto w-full md:h-full md:object-cover"
         />
       </div>
