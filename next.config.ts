@@ -3,17 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   transpilePackages: ["three"],
   images: {
-    /*
-     * Next 16 only optimises qualities on this allowlist (default [75]).
-     * 80 is the home hero, a large photographic header that bands lower down.
-     */
-    qualities: [75, 80],
-    /* Site artwork in public/ plus Tommy's uploads, served by app/uploads. */
-    localPatterns: [
-      { pathname: "/*.png", search: "" },
-      { pathname: "/*.jpg", search: "" },
-      { pathname: "/uploads/**", search: "" },
-    ],
+    /* Only Tommy's uploads go through the optimiser; the hero is pre-sized. */
+    localPatterns: [{ pathname: "/uploads/**", search: "" }],
   },
   experimental: {
     /*

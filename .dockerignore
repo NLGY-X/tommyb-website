@@ -1,0 +1,16 @@
+.git
+.github
+.next
+node_modules
+out
+data
+tests
+.env
+.env.*
+.claude
+.playwright-mcp
+*.log
+/store-image.png
+/tommy-b-stack.png
+Dockerfile
+docker-compose.yml

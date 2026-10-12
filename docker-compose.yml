@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    image: tommyb-site
+    restart: unless-stopped
+    # Caddy proxies to this; nothing outside the box can reach it directly.
+    ports:
+      - "127.0.0.1:3001:3000"
+    env_file: .env
+    # The database (site.db) and Tommy's uploads live here, outside the image.
+    # The container runs as uid 1000, so create ./data as that user first.
+    volumes:
+      - ./data:/app/data
